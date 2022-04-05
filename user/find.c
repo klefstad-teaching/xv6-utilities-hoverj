@@ -51,7 +51,7 @@ my_find(char *path, char *fileCompare){
 	    if(de.inum == 0)
 		    continue;
 
-	    if(strcmp(de.name,".") == 0)//skip over the . and .. directores
+	    if(strcmp(de.name,".") == 0|| strcmp(de.name, "..") == 0)//skip over the . and .. directores
 	      continue;
 	    
 	    memmove(p, de.name, DIRSIZ);
