@@ -50,7 +50,6 @@ my_find(char *path, char *fileCompare){
 	  while(read(fd, &de, sizeof(de)) == sizeof(de)){
 	    if(de.inum == 0)
 		    continue;
-
 	    if(strcmp(de.name,".") == 0|| strcmp(de.name, "..") == 0)//skip over the . and .. directores
 	      continue;
 	    
@@ -61,11 +60,11 @@ my_find(char *path, char *fileCompare){
 		   printf("ls: cannot stat %s\n", buf);
 		   continue;
 	   }
-	   printf("%s vs %s file comparison is: %d\n", my_fileStrip(buf), fileCompare, strcmp(my_fileStrip(buf), fileCompare));
+	 
 	   if(st.type == T_DIR)
 		  my_find(buf, fileCompare);
 	   else if(st.type == T_FILE && strcmp(my_fileStrip(buf), fileCompare) == 0)
-		   printf("%s\n", buf);
+		   printf("./%s\n", buf);
 
 	    
 	  }
