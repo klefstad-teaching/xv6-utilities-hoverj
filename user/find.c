@@ -8,9 +8,11 @@ char*
 my_fileStrip(char *path){
   static char buf[DIRSIZ+1];
   char* p;
+
   for(p=path+strlen(path); p>= path && *p != '/'; p--)
 	  ;
   p++;
+  
   memmove(buf, p, strlen(p)); //move the memory from p into buf
   return buf;
 }
@@ -34,14 +36,18 @@ my_find(char *path, char *fileCompare){
     return;
  }//end of if
 
+  printf("%s\n", my_fileStrip(path));
+  if(strcmp(my_fileStrip(path), fileCompare) == 0){
+    printf("%s\n",path);
+  }
   switch(st.type){
   case T_FILE:
-	  printf("%s %d %d %l\n", my_fileStrip(path), st.type, st.ino, st.size);
+	 // printf("%s %d %d %l\n", my_fileStrip(path), st.type, st.ino, st.size);
 	  break;
 
   case T_DIR:
 	  if(strlen(path) + 1 + DIRSIZ + 1 > sizeof buf) {
-	    printf("ls: path is too long");
+	   // printf("ls: path is too long");
 	    break;
 	  }
 	  strcpy(buf, path);
@@ -58,13 +64,10 @@ my_find(char *path, char *fileCompare){
 	    p[DIRSIZ] = 0;
 
 	   if(stat(buf, &st) < 0){
-		   printf("ls: cannot stat %s\n", buf);
+		  // printf("ls: cannot stat %s\n", buf);
 		   continue;
 	   }
-	   if(st.type == T_DIR)
-		  my_find(buf, fileCompare);
-	   else if(st.type == T_FILE && strcmp(buf, fileCompare) == 0)
-		   printf("%s\n", buf);
+	   my_find(buf, fileCompare);
 
 	    
 	  }
