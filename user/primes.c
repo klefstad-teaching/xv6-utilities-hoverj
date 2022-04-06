@@ -57,11 +57,6 @@ callFunction(int p){
   int pid = fork();
   if(pid == 0){
     ifFork(pipeConnect, p);
-	  // close(pipeConnect[1]);
-   // close(p);
-   // callFunction(pipeConnect[0]);//recursivley call on the function
-   // close(pipeConnect[0]);
-
   }//end of pid if
   else{
    elseFork(pipeConnect, p);
