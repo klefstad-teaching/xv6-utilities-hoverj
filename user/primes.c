@@ -1,29 +1,54 @@
 #include "kernel/types.h"
 #include "kernel/stat.h"
 #include "user/user.h"
+void callFunction(int p);
+
+void
+printPrime(int n){
+  printf("prime %d\n", n);
+}
+
+
+void
+ifFork(int *p, int p1){
+  close(p[1]);
+  close(p1);
+  callFunction(p[0]);
+  close(p[0]);
+ 
+}
+
+void
+elseFork(int *p, int p1){
+  close(p[1]);
+  close(p[0]);
+  close(p1);
+  wait(0);
+}
 
 void
 callFunction(int p){
+  
+  int pipeConnect[2];
+  int varRead = -1;
+
   int numToPrint;
   read(p, &numToPrint, 4);
-  printf("prime %d\n", numToPrint);
+  printPrime(numToPrint);
   
-  int p1[2];
-  pipe(p1);
-  int tempVar = -1; //assign tempVar with some value
-
-  while(1){
-    int n = read(p, &tempVar, 4); //read into tempVar
+  pipe(pipeConnect);
+  for(;;){
+    int n = read(p, &varRead, 4); //read into tempVar
     if( n <= 0) //if 0 or less then the read is done
       break;
-    if(tempVar % numToPrint != 0){ //compare the number read with the number being read to print
-      write(p1[1], &tempVar, 4);
+    if(varRead % numToPrint != 0){ //compare the number read with the number being read to print
+      write(pipeConnect[1], &varRead, 4);
     }//end of if
 
   }//end of while
-  if(tempVar == -1){
-    close(p1[1]);
-    close(p1[0]);
+  if(varRead == -1){
+    close(pipeConnect[1]);
+    close(pipeConnect[0]);
     close(p);
     return;
     //if temp var is -1 close all pipes and return
@@ -31,17 +56,16 @@ callFunction(int p){
 
   int pid = fork();
   if(pid == 0){
-    close(p1[1]);
-    close(p);
-    callFunction(p1[0]);//recursivley call on the function
-    close(p1[0]);
+    ifFork(pipeConnect, p);
+	  // close(pipeConnect[1]);
+   // close(p);
+   // callFunction(pipeConnect[0]);//recursivley call on the function
+   // close(pipeConnect[0]);
 
   }//end of pid if
   else{
-    close(p1[1]);
-    close(p1[0]);
-    close(p);
-    wait(0);
+   elseFork(pipeConnect, p);
+   // wait(0);
   }
 
 }
