@@ -59,12 +59,11 @@ my_find(char *path, char *fileCompare){
 	   if(stat(buf, &st) < 0){
 		   printf("ls: cannot stat %s\n", buf);
 		   continue;
-	   }
-	 
+	   }	 
 	   if(st.type == T_DIR)
 		  my_find(buf, fileCompare);
-	   else if(st.type == T_FILE && strcmp(my_fileStrip(buf), fileCompare) == 0)
-		   printf("./%s\n", buf);
+	   else if(st.type == T_FILE && strcmp(p, fileCompare) == 0)
+		   printf("%s\n", buf);
 
 	    
 	  }
