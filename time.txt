@@ -1,0 +1,5 @@
+sleep: 10 minutes
+pingpong: 45 minutes
+primes: 3 hours
+find: 4-5 hours
+xargs:
